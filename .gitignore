@@ -6,3 +6,5 @@ node_modules
 npm-debug.log*
 pnpm-debug.log*
 yarn-debug.log*
+local-*.log
+local-*.err.log

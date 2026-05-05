@@ -50,8 +50,47 @@ Install and run locally:
 
 ```bash
 npm install
-npm run dev
+npm run dev:333
 ```
+
+Open:
+
+```text
+http://localhost:333/api/health
+```
+
+For safe local tests without sending Telegram messages, set `BOT_DRY_RUN=true`.
+
+PowerShell example:
+
+```powershell
+$env:BOT_DRY_RUN="true"
+$env:BOT_API_KEY="local-test-key"
+$env:TELEGRAM_WEBHOOK_SECRET="local-webhook-secret"
+$env:TELEGRAM_BOT_TOKEN="local:dry-run"
+npm run dev:333
+```
+
+Test the API wrapper:
+
+```powershell
+Invoke-RestMethod -Method Post "http://localhost:333/api/telegram" `
+  -Headers @{ "x-api-key" = "local-test-key" } `
+  -ContentType "application/json" `
+  -Body '{"method":"sendMessage","payload":{"chat_id":123,"text":"hello local"}}'
+```
+
+For real local bot replies without a public webhook URL, use long polling:
+
+```powershell
+$env:BOT_DRY_RUN="false"
+$env:TELEGRAM_BOT_TOKEN="123456:your_real_token"
+$env:BOT_API_KEY="local-test-key"
+$env:TELEGRAM_WEBHOOK_SECRET="local-webhook-secret"
+npm run dev:333:poll
+```
+
+If your deployed webhook is already set, Telegram will reject `getUpdates`. Remove the webhook first with Telegram's `deleteWebhook` method before long polling locally, then set it again after deploying.
 
 Deploy:
 

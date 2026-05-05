@@ -1,5 +1,5 @@
 import { methodNotAllowed, readJson, sendJson, toPublicError } from "../lib/http.js";
-import { sendMessage } from "../lib/telegram.js";
+import { handleUpdate } from "../lib/bot.js";
 
 function verifiedTelegramSecret(req) {
   const expected = process.env.TELEGRAM_WEBHOOK_SECRET;
@@ -8,10 +8,6 @@ function verifiedTelegramSecret(req) {
   }
 
   return req.headers["x-telegram-bot-api-secret-token"] === expected;
-}
-
-function getIncomingMessage(update) {
-  return update?.message || update?.edited_message || update?.channel_post || null;
 }
 
 export default async function handler(req, res) {
@@ -28,18 +24,11 @@ export default async function handler(req, res) {
 
   try {
     const update = await readJson(req);
-    const message = getIncomingMessage(update);
-    const text = message?.text?.trim();
-    const chatId = message?.chat?.id;
-
-    if (chatId && text === "/start") {
-      await sendMessage(chatId, "Bot is online. Use /ping to check the API.");
-    } else if (chatId && text === "/ping") {
-      await sendMessage(chatId, "pong");
-    }
+    const result = await handleUpdate(update);
 
     return sendJson(res, 200, {
-      ok: true
+      ok: true,
+      ...result
     });
   } catch (error) {
     const publicError = toPublicError(error);
