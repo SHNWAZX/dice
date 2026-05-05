@@ -39,7 +39,7 @@
         <a href="#overview" class="active">Overview</a>
         <a href="#quickstart">Quickstart</a>
         <a href="#endpoints">Endpoints</a>
-        <a href="#limits">Rate limits</a>
+        <a href="#delivery">Delivery modes</a>
         <a href="#tester">Live tester</a>
         <a href="#deploy">Vercel deploy</a>
         <a href="#webhook">Webhook</a>
@@ -78,8 +78,8 @@
             <span>local port</span>
           </div>
           <div>
-            <strong>30/s</strong>
-            <span>free broadcast guard</span>
+            <strong>1000/s</strong>
+            <span>official paid mode</span>
           </div>
           <div>
             <strong>429</strong>
@@ -147,24 +147,24 @@ npm run dev:333:poll</code></pre>
           </div>
         </section>
 
-        <section id="limits" class="doc-section split-section">
+        <section id="delivery" class="doc-section split-section">
           <div class="section-heading">
             <span>03</span>
-            <h2>Rate limits</h2>
-            <p>Telegram flood limits are respected instead of bypassed.</p>
+            <h2>Delivery modes</h2>
+            <p>Free delivery stays safe. Official paid broadcast can raise throughput with Telegram Stars.</p>
           </div>
           <div class="flow-panel">
             <div class="lane">
-              <span>Private chat</span>
+              <span>Free private</span>
               <b>1 msg/sec</b>
             </div>
             <div class="lane">
-              <span>Group chat</span>
+              <span>Free group</span>
               <b>20 msg/min</b>
             </div>
             <div class="lane">
-              <span>Broadcast</span>
-              <b>30 msg/sec</b>
+              <span>Paid broadcast</span>
+              <b>1000 msg/sec</b>
             </div>
             <div class="animated-lanes" aria-hidden="true">
               <i></i><i></i><i></i><i></i>
@@ -195,7 +195,8 @@ npm run dev:333:poll</code></pre>
               Payload
               <textarea id="payload" spellcheck="false">{
   "chat_id": 123,
-  "text": "hello from the glass docs"
+  "text": "hello from the glass docs",
+  "allow_paid_broadcast": false
 }</textarea>
             </label>
             <button id="sendTest" class="button primary" type="button">Send local test</button>
@@ -220,9 +221,31 @@ TELEGRAM_WEBHOOK_SECRET=another_long_random_secret</code></pre>
           </div>
         </section>
 
-        <section id="webhook" class="doc-section">
+        <section id="paid-mode" class="doc-section">
           <div class="section-heading">
             <span>06</span>
+            <h2>Official paid broadcast</h2>
+            <p>Use Telegram's supported high-speed lane when your bot has enough Stars.</p>
+          </div>
+          <div class="command-card wide">
+            <div class="card-title">
+              <h3>Enable per request</h3>
+              <button type="button" data-copy="{&#10;  &quot;method&quot;: &quot;sendMessage&quot;,&#10;  &quot;payload&quot;: {&#10;    &quot;chat_id&quot;: 123,&#10;    &quot;text&quot;: &quot;High speed official broadcast&quot;,&#10;    &quot;allow_paid_broadcast&quot;: true&#10;  }&#10;}">Copy</button>
+            </div>
+            <pre><code>{
+  "method": "sendMessage",
+  "payload": {
+    "chat_id": 123,
+    "text": "High speed official broadcast",
+    "allow_paid_broadcast": true
+  }
+}</code></pre>
+          </div>
+        </section>
+
+        <section id="webhook" class="doc-section">
+          <div class="section-heading">
+            <span>07</span>
             <h2>Webhook setup</h2>
             <p>After deployment, register the production webhook URL.</p>
           </div>

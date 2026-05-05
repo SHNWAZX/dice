@@ -43,3 +43,21 @@ test("messages to different chats still reserve the global broadcast lane", () =
   assert.equal(second.delayMs, 34);
   assert.equal(second.retryAfter, 1);
 });
+
+test("paid broadcast uses Telegram's official higher global lane", () => {
+  resetLimiterForTests();
+
+  const first = reserveTelegramSlot("sendMessage", {
+    chat_id: 1,
+    allow_paid_broadcast: true
+  }, 1000);
+  const second = reserveTelegramSlot("sendMessage", {
+    chat_id: 2,
+    allow_paid_broadcast: true
+  }, 1000);
+
+  assert.equal(first.delayMs, 0);
+  assert.equal(first.paidBroadcast, true);
+  assert.equal(second.delayMs, 1);
+  assert.equal(second.paidBroadcast, true);
+});

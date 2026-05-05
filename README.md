@@ -2,7 +2,7 @@
 
 This is a Vercel-ready Telegram Bot API wrapper with webhook support and safe anti-flood handling.
 
-It does not remove Telegram limits. Telegram enforces flood control on its platform. The safe path is to throttle, queue, and honor `retry_after` when Telegram returns `429`.
+It does not remove Telegram's free-platform limits. Telegram enforces delivery controls on its platform. The safe path is to throttle, queue, and honor `retry_after` when Telegram returns `429`.
 
 The repo also includes a glass-style documentation website at `/` with a local API tester.
 
@@ -13,7 +13,8 @@ The repo also includes a glass-style documentation website at `/` with a local A
 - `POST /api/webhook` receives Telegram webhook updates and responds to `/start` and `/ping`.
 - `POST /api/set-webhook` registers the deployed webhook URL with Telegram.
 - `GET /api/health` checks whether required environment variables are configured.
-- Local throttling avoids common free-tier limits: about one message per second per private chat, one message every three seconds for groups when `chat_type` is supplied, and about 30 outgoing messages per second globally.
+- Local throttling avoids common free-mode delivery problems: about one message per second per private chat, one message every three seconds for groups when `chat_type` is supplied, and about 30 outgoing messages per second globally.
+- Official paid broadcast mode is supported by passing `allow_paid_broadcast: true`, which raises the local global lane to Telegram's documented 1000 messages per second mode.
 - Telegram `429` responses are handled with `retry_after`; short waits are retried, longer waits are returned to the caller.
 
 ## Official Limits
@@ -24,7 +25,7 @@ Telegram documents these free broadcast limits in the Bot FAQ:
 - Group chats: no more than 20 messages per minute.
 - Bulk notifications: about 30 messages per second.
 
-Telegram also documents Paid Broadcasts in the Bot API, which can raise broadcast throughput up to 1000 messages per second for a Telegram Stars fee. A local Bot API server changes file, upload, and webhook hosting behavior, but it does not make abuse or flood limits disappear.
+Telegram also documents Paid Broadcasts in the Bot API, which can raise broadcast throughput up to 1000 messages per second for a Telegram Stars fee. A local Bot API server changes file, upload, and webhook hosting behavior, but it does not make abuse controls disappear.
 
 Sources:
 
@@ -134,6 +135,19 @@ For group chats, include `chat_type` so the local limiter can use the stricter g
     "chat_id": -1001234567890,
     "chat_type": "supergroup",
     "text": "Hello group"
+  }
+}
+```
+
+For Telegram's official high-speed paid broadcast mode, add `allow_paid_broadcast` to the payload. Telegram charges Stars from the bot balance for this mode:
+
+```json
+{
+  "method": "sendMessage",
+  "payload": {
+    "chat_id": 123456789,
+    "text": "Official paid broadcast",
+    "allow_paid_broadcast": true
   }
 }
 ```
