@@ -1,6 +1,6 @@
 import http from "node:http";
-import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { createReadStream, existsSync, readFileSync } from "node:fs";
+import { extname, resolve } from "node:path";
 import health from "./api/health.js";
 import telegram from "./api/telegram.js";
 import setWebhook from "./api/set-webhook.js";
@@ -14,6 +14,21 @@ const routes = new Map([
   ["/api/set-webhook", setWebhook],
   ["/api/webhook", webhook]
 ]);
+
+const staticFiles = new Map([
+  ["/", "index.html"],
+  ["/index.html", "index.html"],
+  ["/styles.css", "styles.css"],
+  ["/app.js", "app.js"],
+  ["/assets/api-console.png", "assets/api-console.png"]
+]);
+
+const contentTypes = {
+  ".html": "text/html; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".png": "image/png"
+};
 
 function sleep(ms) {
   return new Promise((resolveSleep) => setTimeout(resolveSleep, ms));
@@ -58,6 +73,20 @@ function sendJson(res, statusCode, body) {
   res.statusCode = statusCode;
   res.setHeader("content-type", "application/json; charset=utf-8");
   res.end(JSON.stringify(body, null, 2));
+}
+
+function sendStatic(res, file) {
+  const path = resolve(file);
+  if (!existsSync(path)) {
+    return sendJson(res, 404, {
+      ok: false,
+      error: "not_found"
+    });
+  }
+
+  res.statusCode = 200;
+  res.setHeader("content-type", contentTypes[extname(path)] || "application/octet-stream");
+  createReadStream(path).pipe(res);
 }
 
 async function startPolling() {
@@ -109,13 +138,9 @@ const shouldPoll = process.argv.includes("--poll") || process.env.LOCAL_LONG_POL
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url || "/", `http://${req.headers.host || `localhost:${port}`}`);
 
-  if (url.pathname === "/") {
-    return sendJson(res, 200, {
-      ok: true,
-      service: "telegram-bot-api-vercel",
-      endpoints: ["/api/health", "/api/telegram", "/api/webhook", "/api/set-webhook"],
-      local_long_polling: shouldPoll
-    });
+  const staticFile = staticFiles.get(url.pathname);
+  if (req.method === "GET" && staticFile) {
+    return sendStatic(res, staticFile);
   }
 
   const handler = routes.get(url.pathname);

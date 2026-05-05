@@ -4,8 +4,11 @@ This is a Vercel-ready Telegram Bot API wrapper with webhook support and safe an
 
 It does not remove Telegram limits. Telegram enforces flood control on its platform. The safe path is to throttle, queue, and honor `retry_after` when Telegram returns `429`.
 
+The repo also includes a glass-style documentation website at `/` with a local API tester.
+
 ## What It Does
 
+- `GET /` serves the hosted docs website.
 - `POST /api/telegram` calls any Telegram Bot API method with your bot token kept server-side.
 - `POST /api/webhook` receives Telegram webhook updates and responds to `/start` and `/ping`.
 - `POST /api/set-webhook` registers the deployed webhook URL with Telegram.

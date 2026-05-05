@@ -8,3 +8,5 @@ pnpm-debug.log*
 yarn-debug.log*
 local-*.log
 local-*.err.log
+.edge-profile-*
+docs-*.png

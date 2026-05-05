@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Documentation and local tester for a Vercel-ready Telegram Bot API wrapper.">
+    <title>Telegram Bot API Vercel Docs</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="backdrop" aria-hidden="true">
+      <div class="mesh mesh-a"></div>
+      <div class="mesh mesh-b"></div>
+      <div class="grid-lines"></div>
+    </div>
+
+    <header class="topbar">
+      <a class="brand" href="#overview" aria-label="Telegram Bot API Vercel docs home">
+        <span class="brand-mark">T</span>
+        <span>
+          <strong>Telegram Bot API</strong>
+          <small>Vercel docs</small>
+        </span>
+      </a>
+      <nav class="topnav" aria-label="Primary navigation">
+        <a href="#quickstart">Quickstart</a>
+        <a href="#endpoints">Endpoints</a>
+        <a href="#tester">Tester</a>
+        <a href="#deploy">Deploy</a>
+      </nav>
+      <a class="repo-link" href="https://github.com/shnwazdeveloper/telegram-bot-api-vercel" target="_blank" rel="noreferrer">
+        GitHub
+      </a>
+    </header>
+
+    <main class="layout">
+      <aside class="side-nav" aria-label="Documentation sections">
+        <span class="side-title">Docs</span>
+        <a href="#overview" class="active">Overview</a>
+        <a href="#quickstart">Quickstart</a>
+        <a href="#endpoints">Endpoints</a>
+        <a href="#limits">Rate limits</a>
+        <a href="#tester">Live tester</a>
+        <a href="#deploy">Vercel deploy</a>
+        <a href="#webhook">Webhook</a>
+      </aside>
+
+      <div class="content">
+        <section id="overview" class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow">
+              <span class="pulse-dot"></span>
+              <span id="healthText">Checking local API</span>
+            </div>
+            <h1>Telegram Bot API docs for Vercel.</h1>
+            <p>
+              A hosted API wrapper, webhook receiver, and local real-time runner with safe
+              Telegram flood handling built into the request path.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="/api/health">Open health</a>
+              <button class="button ghost" type="button" data-copy="npm run dev:333">Copy local run</button>
+            </div>
+          </div>
+          <figure class="visual-panel">
+            <img src="/assets/api-console.png" alt="Glass console illustration showing Telegram API request flow and rate limit lanes.">
+            <figcaption>API proxy, webhook, and limiter working as one deployable surface.</figcaption>
+          </figure>
+        </section>
+
+        <section class="metric-strip" aria-label="Project highlights">
+          <div>
+            <strong>4</strong>
+            <span>API routes</span>
+          </div>
+          <div>
+            <strong>333</strong>
+            <span>local port</span>
+          </div>
+          <div>
+            <strong>30/s</strong>
+            <span>free broadcast guard</span>
+          </div>
+          <div>
+            <strong>429</strong>
+            <span>retry aware</span>
+          </div>
+        </section>
+
+        <section id="quickstart" class="doc-section">
+          <div class="section-heading">
+            <span>01</span>
+            <h2>Quickstart</h2>
+            <p>Run the docs website and API locally on port 333.</p>
+          </div>
+          <div class="command-grid">
+            <article class="command-card">
+              <div class="card-title">
+                <h3>Dry-run local server</h3>
+                <button type="button" data-copy="$env:BOT_DRY_RUN='true'; $env:BOT_API_KEY='local-test-key'; $env:TELEGRAM_WEBHOOK_SECRET='local-webhook-secret'; $env:TELEGRAM_BOT_TOKEN='local:dry-run'; npm run dev:333">Copy</button>
+              </div>
+              <pre><code>$env:BOT_DRY_RUN="true"
+$env:BOT_API_KEY="local-test-key"
+$env:TELEGRAM_WEBHOOK_SECRET="local-webhook-secret"
+$env:TELEGRAM_BOT_TOKEN="local:dry-run"
+npm run dev:333</code></pre>
+            </article>
+            <article class="command-card">
+              <div class="card-title">
+                <h3>Real-time polling</h3>
+                <button type="button" data-copy="$env:BOT_DRY_RUN='false'; $env:TELEGRAM_BOT_TOKEN='123456:your_real_token'; npm run dev:333:poll">Copy</button>
+              </div>
+              <pre><code>$env:BOT_DRY_RUN="false"
+$env:TELEGRAM_BOT_TOKEN="123456:your_real_token"
+npm run dev:333:poll</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section id="endpoints" class="doc-section">
+          <div class="section-heading">
+            <span>02</span>
+            <h2>Endpoints</h2>
+            <p>The same routes run locally and on Vercel.</p>
+          </div>
+          <div class="endpoint-grid">
+            <article class="endpoint-card">
+              <span class="method get">GET</span>
+              <h3>/api/health</h3>
+              <p>Reports whether required environment variables are configured.</p>
+            </article>
+            <article class="endpoint-card">
+              <span class="method post">POST</span>
+              <h3>/api/telegram</h3>
+              <p>Calls Telegram methods while keeping the bot token server-side.</p>
+            </article>
+            <article class="endpoint-card">
+              <span class="method post">POST</span>
+              <h3>/api/webhook</h3>
+              <p>Receives Telegram updates and handles /start and /ping.</p>
+            </article>
+            <article class="endpoint-card">
+              <span class="method post">POST</span>
+              <h3>/api/set-webhook</h3>
+              <p>Registers the deployed webhook URL with Telegram.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="limits" class="doc-section split-section">
+          <div class="section-heading">
+            <span>03</span>
+            <h2>Rate limits</h2>
+            <p>Telegram flood limits are respected instead of bypassed.</p>
+          </div>
+          <div class="flow-panel">
+            <div class="lane">
+              <span>Private chat</span>
+              <b>1 msg/sec</b>
+            </div>
+            <div class="lane">
+              <span>Group chat</span>
+              <b>20 msg/min</b>
+            </div>
+            <div class="lane">
+              <span>Broadcast</span>
+              <b>30 msg/sec</b>
+            </div>
+            <div class="animated-lanes" aria-hidden="true">
+              <i></i><i></i><i></i><i></i>
+            </div>
+          </div>
+        </section>
+
+        <section id="tester" class="doc-section tester-section">
+          <div class="section-heading">
+            <span>04</span>
+            <h2>Live tester</h2>
+            <p>Send a dry-run request to the local API on port 333.</p>
+          </div>
+          <div class="tester">
+            <label>
+              API key
+              <input id="apiKey" type="password" value="local-test-key" autocomplete="off">
+            </label>
+            <label>
+              Telegram method
+              <select id="method">
+                <option>sendMessage</option>
+                <option>getMe</option>
+                <option>setWebhook</option>
+              </select>
+            </label>
+            <label class="payload-field">
+              Payload
+              <textarea id="payload" spellcheck="false">{
+  "chat_id": 123,
+  "text": "hello from the glass docs"
+}</textarea>
+            </label>
+            <button id="sendTest" class="button primary" type="button">Send local test</button>
+            <pre class="response-box" aria-live="polite"><code id="responseOutput">Waiting for a request...</code></pre>
+          </div>
+        </section>
+
+        <section id="deploy" class="doc-section">
+          <div class="section-heading">
+            <span>05</span>
+            <h2>Vercel deploy</h2>
+            <p>Push to GitHub, import the repo in Vercel, then set the secrets.</p>
+          </div>
+          <div class="command-card wide">
+            <div class="card-title">
+              <h3>Required environment variables</h3>
+              <button type="button" data-copy="TELEGRAM_BOT_TOKEN=123456:your_botfather_token&#10;BOT_API_KEY=make_this_a_long_random_secret&#10;TELEGRAM_WEBHOOK_SECRET=another_long_random_secret">Copy</button>
+            </div>
+            <pre><code>TELEGRAM_BOT_TOKEN=123456:your_botfather_token
+BOT_API_KEY=make_this_a_long_random_secret
+TELEGRAM_WEBHOOK_SECRET=another_long_random_secret</code></pre>
+          </div>
+        </section>
+
+        <section id="webhook" class="doc-section">
+          <div class="section-heading">
+            <span>06</span>
+            <h2>Webhook setup</h2>
+            <p>After deployment, register the production webhook URL.</p>
+          </div>
+          <div class="command-card wide">
+            <div class="card-title">
+              <h3>Register webhook</h3>
+              <button type="button" data-copy="curl -X POST https://your-project.vercel.app/api/set-webhook -H 'content-type: application/json' -H 'x-api-key: YOUR_BOT_API_KEY' -d '{}'">Copy</button>
+            </div>
+            <pre><code>curl -X POST "https://your-project.vercel.app/api/set-webhook" \
+  -H "content-type: application/json" \
+  -H "x-api-key: YOUR_BOT_API_KEY" \
+  -d "{}"</code></pre>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
