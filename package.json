@@ -1,0 +1,15 @@
+{
+  "name": "telegram-bot-api-vercel",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A Vercel-ready Telegram Bot API wrapper with safe rate-limit handling.",
+  "scripts": {
+    "dev": "npx vercel dev",
+    "test": "node --test",
+    "start": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
