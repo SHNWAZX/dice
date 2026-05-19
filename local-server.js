@@ -114,7 +114,8 @@ async function startPolling() {
         offset = update.update_id + 1;
         const result = await handleUpdate(update);
         if (result.handled) {
-          console.log(`Handled ${result.command} from update ${update.update_id}.`);
+          const label = result.command || result.type || "update";
+          console.log(`Handled ${label} from update ${update.update_id}.`);
         }
       }
 

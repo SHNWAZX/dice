@@ -10,7 +10,7 @@ The repo also includes a glass-style documentation website at `/` with a local A
 
 - `GET /` serves the hosted docs website.
 - `POST /api/telegram` calls any Telegram Bot API method with your bot token kept server-side.
-- `POST /api/webhook` receives Telegram webhook updates and responds to `/start` and `/ping`.
+- `POST /api/webhook` receives Telegram webhook updates, responds to `/start` and `/ping`, and replies with a 1-6 prediction when someone sends the dice emoji.
 - `POST /api/set-webhook` registers the deployed webhook URL with Telegram.
 - `GET /api/health` checks whether required environment variables are configured.
 - Local throttling avoids common free-mode delivery problems: about one message per second per private chat, one message every three seconds for groups when `chat_type` is supplied, and about 30 outgoing messages per second globally.
