@@ -1,16 +1,12 @@
 {
-  "name": "telegram-bot-api-vercel",
+  "name": "dice",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "A Vercel-ready Telegram Bot API wrapper with safe rate-limit handling.",
+  "description": "Simple Telegram dice prediction bot.",
   "scripts": {
-    "dev": "node local-server.js --port 333",
-    "dev:333": "node local-server.js --port 333",
-    "dev:333:poll": "node local-server.js --port 333 --poll",
-    "vercel:dev": "npx vercel dev --listen 333",
-    "test": "node --test",
-    "start": "node local-server.js --port 333"
+    "start": "node bot.js",
+    "test": "node --check bot.js"
   },
   "engines": {
     "node": ">=20"
